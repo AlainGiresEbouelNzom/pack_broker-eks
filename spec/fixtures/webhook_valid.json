@@ -1,0 +1,17 @@
+{
+  "events": [{
+    "name": "contract_content_changed"
+  }],
+  "request": {
+    "method": "POST",
+    "url": "HTTPS://some.url",
+    "username": "username",
+    "password": "password",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "body": {
+      "a" : "body"
+    }
+  }
+}

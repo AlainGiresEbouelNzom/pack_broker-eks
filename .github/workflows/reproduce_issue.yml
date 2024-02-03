@@ -1,0 +1,20 @@
+name: Reproduce issue
+
+on:
+  push:
+    branches:
+      - 'issue/**'
+  pull_request:
+    branches:
+      - 'issue/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose -f docker-compose-issue-repro.yml up --abort-on-container-exit --exit-code-from repro-issue

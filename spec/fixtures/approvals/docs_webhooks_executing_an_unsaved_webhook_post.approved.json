@@ -1,0 +1,63 @@
+{
+  "category": "Webhooks",
+  "name": "Executing an unsaved webhook",
+  "order": 39,
+  "request": {
+    "method": "POST",
+    "path_template": "/webhooks/execute",
+    "path": "/webhooks/execute",
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/hal+json"
+    },
+    "body": {
+      "description": "an example webhook",
+      "events": [
+        {
+          "name": "contract_content_changed"
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "url": "https://example.org/example",
+        "username": "username",
+        "password": "password",
+        "headers": {
+          "Accept": "application/json"
+        },
+        "body": {
+          "pactUrl": "${pactbroker.pactUrl}"
+        }
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/hal+json;charset=utf-8"
+    },
+    "body": {
+      "request": {
+        "headers": {
+          "accept": "application/json",
+          "user-agent": "Pact Broker",
+          "authorization": "**********"
+        },
+        "body": {
+          "pactUrl": "https://pact-broker/pacts/provider/Bar/consumer/Foo/pact-version/3e193ecb37ad04b43ce974a38352c704b2e0ed6b/metadata/3e193ecb37ad04b43ce974a38352c704b2e0ed6b"
+        },
+        "url": "/example"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": ""
+      },
+      "logs": "[2021-09-01T10:07:21Z] DEBUG: Webhook context {\"base_url\":\"https://pact-broker\",\"event_name\":\"test\"}\n[2021-09-01T10:07:21Z] INFO: HTTP/1.1 POST https://example.org/example\n[2021-09-01T10:07:21Z] INFO: accept: application/json\n[2021-09-01T10:07:21Z] INFO: user-agent: Pact Broker\n[2021-09-01T10:07:21Z] INFO: authorization: **********\n[2021-09-01T10:07:21Z] INFO: {\"pactUrl\":\"https://pact-broker/pacts/provider/Bar/consumer/Foo/pact-version/3e193ecb37ad04b43ce974a38352c704b2e0ed6b/metadata/3e193ecb37ad04b43ce974a38352c704b2e0ed6b\"}\n[2021-09-01T10:07:21Z] INFO: HTTP/1.0 200 \n[2021-09-01T10:07:21Z] INFO: \n",
+      "success": true,
+      "_links": {
+      }
+    }
+  }
+}

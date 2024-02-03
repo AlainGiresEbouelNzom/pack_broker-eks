@@ -1,0 +1,43 @@
+{
+  "category": "Webhooks",
+  "name": "Executing a saved webhook",
+  "order": 35,
+  "request": {
+    "method": "POST",
+    "path_template": "/webhooks/:uuid/execute",
+    "path": "/webhooks/d2181b32-8b03-4daf-8cc0-d9168b2f6fac/execute",
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/hal+json"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/hal+json;charset=utf-8"
+    },
+    "body": {
+      "request": {
+        "headers": {
+          "accept": "*/*",
+          "user-agent": "Pact Broker",
+          "content-type": "application/json"
+        },
+        "body": {
+          "pactUrl": "https://pact-broker/pacts/provider/Bar/consumer/Foo/pact-version/3e193ecb37ad04b43ce974a38352c704b2e0ed6b/metadata/3e193ecb37ad04b43ce974a38352c704b2e0ed6b"
+        },
+        "url": "/webhook"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": ""
+      },
+      "logs": "[2021-09-01T10:07:21Z] DEBUG: Webhook context {\"base_url\":\"https://pact-broker\",\"event_name\":\"test\"}\n[2021-09-01T10:07:21Z] INFO: HTTP/1.1 POST https://example.org/webhook\n[2021-09-01T10:07:21Z] INFO: accept: */*\n[2021-09-01T10:07:21Z] INFO: user-agent: Pact Broker\n[2021-09-01T10:07:21Z] INFO: content-type: application/json\n[2021-09-01T10:07:21Z] INFO: {\"pactUrl\":\"https://pact-broker/pacts/provider/Bar/consumer/Foo/pact-version/3e193ecb37ad04b43ce974a38352c704b2e0ed6b/metadata/3e193ecb37ad04b43ce974a38352c704b2e0ed6b\"}\n[2021-09-01T10:07:21Z] INFO: HTTP/1.0 200 \n[2021-09-01T10:07:21Z] INFO: \n",
+      "success": true,
+      "_links": {
+      }
+    }
+  }
+}

@@ -1,0 +1,219 @@
+%body
+  != render :haml, :'index/_css_and_js', :layout => false
+  .container
+    != render :haml, :'index/_dashboard_navbar', :layout => false, locals: {tag_toggle: nil, base_url: base_url}
+
+    %div.mt-4
+      .row
+        .col
+          .row.my-0
+            .col.my-0{ style: "text-transform: uppercase; font-size: 70%"}
+              Consumer
+          .row.my-0
+            .col.my-0
+              %h2.page-header{ style: "margin-top: 0" }
+                = consumer_name
+        .col
+          .row
+            .col.my-0{ style: "text-transform: uppercase; font-size: 70%"}
+              Provider
+          .row.my-0
+            .col.my-0
+              %h2.page-header{ style: "margin-top: 0" }
+                = provider_name
+
+
+    - errors.each do | error |
+      %div.alert.alert-danger
+        = error
+
+    - if consumer && provider
+      %form
+        %div.mt-4.mb-2
+          %label.mr-2
+            View pacts by:
+          %div.form-check.form-check-inline
+            %input.form-check-input{ type: "radio", name: "view", id: "by_branch", value: "branch", checked: view == "branch" }
+            %label.form-check-label{ for:"by_branch"} branches
+          %div.form-check.form-check-inline
+            %input.form-check-input{ type: "radio", name: "view", id: "by_tag", value: "tag", checked: view == "tag"}
+            %label.form-check-label{ for:"by_tag"} tags
+          %div.form-check.form-check-inline
+            %input.form-check-input{ type: "radio", name: "view", id: "by_environment", value: "environment", checked: view == "environment"}
+            %label.form-check-label{ for:"by_environment"} environments
+          %div.form-check.form-check-inline
+            %input.form-check-input{ type: "radio", name: "view", id: "by_all", value: "all", checked: view == "all"}
+            %label.form-check-label{ for:"by_all"} no filter
+        %input{ type: "hidden", name: "page", value: page_number }
+        %input{ type: "hidden", name: "pageSize", value: page_size }
+
+      %table.table.table-bordered.table-striped{ id: 'relationships' }
+        %thead
+          %tr
+            %th.consumer-version-number
+              Consumer<br>Version
+              %span.sort-icon.relationships-sort
+            %th.provider-version-number
+              Provider<br>Version
+              %span.sort-icon.relationships-sort
+            %th.pact{ style: 'width: 40px' }
+            %th
+              Published
+              %span.sort-icon.relationships-sort
+            %th
+              Webhook<br>status
+            %th
+              Last<br>verified
+              %span.sort-icon.relationships-sort
+            %th
+        %tbody
+
+          - index_items.each do | index_item |
+            %tr{'data-pact-versions-url': index_item.pact_versions_url,
+                'data-consumer-name': index_item.consumer_name,
+                'data-provider-name': index_item.provider_name,
+                'data-integration-url': index_item.integration_url,
+                'data-pact-tags': index_item.pact_tags,
+                'data-pact-branches': index_item.pact_branches,
+                'data-view': view
+                }
+              %td.consumer-version-number{"data-text": index_item.consumer_version_order}
+                %div.clippable{"data-clippable": index_item.consumer_version_number}
+                  = index_item.display_consumer_version_number
+                  - if index_item.display_consumer_version_number
+                    %button.clippy.invisible{ title: "Copy to clipboard" }
+                      %span.copy-icon
+                - if view == "branch" || view == "all"
+                  - index_item.consumer_version_branch_heads.each do | branch_head |
+                    %div.clippable{"data-clippable": branch_head.branch_name}
+                      %div{"class": "tag badge badge-dark", "title": branch_head.tooltip, "data-toggle": "tooltip", "data-placement": "right"}
+                        = "branch: " + ellipsisize(branch_head.branch_name)
+                      %button.clippy.invisible{ title: "Copy to clipboard" }
+                        %span.copy-icon
+                - if view == "tag" || view == "all"
+                  - index_item.consumer_version_latest_tag_names.each do | tag_name |
+                    %div.clippable{"data-clippable": tag_name}
+                      .tag.badge.badge-primary
+                        = "tag: " + ellipsisize(tag_name)
+                      %button.clippy.invisible{ title: "Copy to clipboard" }
+                        %span.copy-icon
+                - if view == "environment" || view == "all"
+                  - index_item.consumer_version_environment_names.each do | environment_name |
+                    %div.clippable{"data-clippable": environment_name}
+                      .tag.badge.badge-success
+                        = "env: " + ellipsisize(environment_name)
+                      %button.clippy.invisible{ title: "Copy to clipboard" }
+                        %span.copy-icon
+                - if view == "all" && index_item.display_latest_label? && index_item.latest?
+                  .tag.badge.bg-light
+                    latest
+              %td.provider-version-number
+                %div.clippable{"data-clippable": index_item.provider_version_number}
+                  = index_item.display_provider_version_number
+                  - if index_item.display_provider_version_number
+                    %button.clippy.invisible{ title: "Copy to clipboard" }
+                      %span.copy-icon
+                - if view == "branch" || view == "all"
+                  - index_item.provider_version_branch_heads.each do | branch_head |
+                    %div.clippable{"data-clippable": branch_head.branch_name}
+                      %div{"class": "tag badge badge-dark", "title": branch_head.tooltip, "data-toggle": "tooltip", "data-placement": "right"}
+                        = "branch: " + ellipsisize(branch_head.branch_name)
+                      %button.clippy.invisible{ title: "Copy to clipboard" }
+                        %span.copy-icon
+                - if view == "tag" || view == "all"
+                  - index_item.provider_version_latest_tag_names.each do | tag_name |
+                    %div.clippable{"data-clippable": tag_name}
+                      .tag.badge.badge-primary
+                        = "tag: " + ellipsisize(tag_name)
+                      %button.clippy.invisible{ title: "Copy to clipboard" }
+                        %span.copy-icon
+                - if view == "environment" || view == "all"
+                  - index_item.provider_version_environment_names.each do | environment_name |
+                    %div.clippable{"data-clippable": environment_name}
+                      .tag.badge.badge-success
+                        = "env: " + ellipsisize(environment_name)
+                      %button.clippy.invisible{ title: "Copy to clipboard" }
+                        %span.copy-icon
+              %td.pact
+                %span.pact
+                  %a{ href: index_item.pact_url, title: "View pact" }
+                %span.pact-matrix
+                  %a{ href: index_item.pact_matrix_url, title: "View pact matrix" }
+              %td{"data-text": index_item.publication_date_of_latest_pact_order}
+                = index_item.publication_date_of_latest_pact.gsub("about ", "")
+              %td{ class: "table-#{index_item.webhook_status}" }
+                - if index_item.show_webhook_status?
+                  %a{ href: index_item.webhook_url }
+                    = index_item.webhook_label
+
+              %td{ class: "table-#{index_item.pseudo_branch_verification_status}", title: index_item.verification_tooltip, "data-toggle": "tooltip", "data-placement": "left" }
+                %div
+                  = index_item.last_verified_date.gsub("about ", "")
+                  - if index_item.warning?
+                    %span.warning-icon{ 'aria-hidden': true }
+                - if index_item.failed_and_pact_pending?
+                  %div
+                    (pact pending)
+              %td
+                - if index_item.show_menu?
+                  %span.integration-settings.kebab-horizontal{ 'aria-hidden': true }
+
+      %div.pagination.text-center
+
+      - pagination_locals = { page_number: page_number, page_size: page_size, pagination_record_count: pagination_record_count, current_page_size: current_page_size }
+      != render :haml, :'index/_pagination', :layout => false, locals: pagination_locals
+
+  :javascript
+    $(function(){
+      $("#relationships").tablesorter();
+    });
+
+    $(document).ready(function(){
+      initializeClipper(".clippable");
+
+      $("span.pact a").load("#{base_url}/images/doc-text.svg");
+      $("span.pact-matrix a").load("#{base_url}/images/doc-matrix.svg");
+      $('td[data-toggle="tooltip"]').each(function(index, td){
+        //appended tooltip div screws up table if it's appended after a
+        //td, so need to append it to a div
+        $(td).tooltip({ container: $(td).first() });
+      });
+
+      // https://www.w3schools.com/bootstrap/bootstrap_ref_js_tooltip.asp
+
+      $('div[data-toggle="tooltip"]').each(function(index, div){
+        $(div).tooltip()
+      });
+
+    });
+
+    $(".reset-search").on("click", function() {
+      const url = new URL(window.location)
+      url.searchParams.delete('search')
+      window.location = url.toString();
+    })
+
+    $(".submit-search").on("click", function() {
+      search = $("#search").val();
+      const url = new URL(window.location)
+      url.searchParams.set('search', search)
+      window.location = url.toString();
+    })
+
+    $(".search").keypress(function(event) {
+      const enterKeyCode = 13;
+
+      const key = event.which;
+      if (key === enterKeyCode) {
+        event.preventDefault();
+        search = $("#search").val();
+        const url = new URL(window.location)
+        url.searchParams.set('search', search)
+        window.location = url.toString();
+      }
+    })
+
+    $("[name*='view']").change(function(event){
+      $("[name='page']").attr('disabled','disabled');
+      $(this.form).submit()
+    })

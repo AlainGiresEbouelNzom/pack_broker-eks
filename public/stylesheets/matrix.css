@@ -1,0 +1,77 @@
+:root {
+  /* See public/javascripts/set-css-asset-base-url.js */
+  --clock-url: url('/images/clock.svg');
+}
+
+div {
+  /*border: 1px solid red;*/
+ }
+
+.selector {
+  margin-top: 0.5em;
+}
+
+.field {
+  margin-right: 1em;
+}
+
+.selector label {
+  width: 10em;
+}
+
+input[type="radio"] {
+  /*margin-right: 4px;*/
+}
+
+div.top-of-group {
+  margin-top: 10px;
+}
+
+div.tag-parent {
+  margin-top: 5px;
+  margin-bottom: 1px;
+}
+
+div.tag, div.version {
+  display: inline-block;
+}
+
+span.pre-verified-icon {
+  color: #337ab7;
+  background-image: var(--clock-url);
+  background-repeat: no-repeat;
+  display:inline-block;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Need to make the tooltip wide enough to show the full SHA */
+td.pact-published .tooltip-inner {
+  max-width: 300px;
+}
+
+input.pacticipant_name {
+  width: 250px;
+}
+
+input.tag, input.version {
+  width: 250px;
+  margin-left: 0.5em;
+}
+
+img.pact_badge {
+  float: right;
+  margin-top: 15px;
+}
+
+.selector {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.field {
+  display: flex;
+  justify-content: flex-start;
+}

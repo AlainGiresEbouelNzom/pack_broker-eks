@@ -1,0 +1,79 @@
+{
+  "category": "Webhooks",
+  "name": "Webhooks status",
+  "order": 29,
+  "request": {
+    "method": "GET",
+    "path_template": "/pacts/provider/:provider_name/consumer/:consumer_name/webhooks/status",
+    "path": "/pacts/provider/Bar/consumer/Foo/webhooks/status",
+    "headers": {
+      "Accept": "application/hal+json"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/hal+json;charset=utf-8"
+    },
+    "body": {
+      "summary": {
+        "successful": 0,
+        "failed": 0,
+        "notRun": 1
+      },
+      "_embedded": {
+        "triggeredWebhooks": [
+          {
+            "name": "POST example.org",
+            "status": "not_run",
+            "attemptsMade": 1,
+            "attemptsRemaining": 6,
+            "triggerType": "resource_creation",
+            "eventName": "contract_content_changed",
+            "triggeredAt": "2021-09-01T00:07:21+00:00",
+            "_links": {
+              "pb:logs": {
+                "href": "https://pact-broker/triggered-webhooks/6cd5cc48-db3c-4a4c-a36d-e9bedeb9d91e/logs",
+                "title": "Webhook execution logs",
+                "name": "POST example.org"
+              },
+              "pb:webhook": {
+                "href": "https://pact-broker/webhooks/d2181b32-8b03-4daf-8cc0-d9168b2f6fac",
+                "title": "Webhook",
+                "name": "POST example.org"
+              }
+            }
+          }
+        ]
+      },
+      "_links": {
+        "self": {
+          "href": "http://example.org/pacts/provider/Bar/consumer/Foo/webhooks/status",
+          "title": "Webhooks status"
+        },
+        "pb:error-logs": [
+
+        ],
+        "pb:pact-webhooks": {
+          "title": "Webhooks for the pact between Foo and Bar",
+          "href": "https://pact-broker/pacts/provider/Bar/consumer/Foo/webhooks"
+        },
+        "pb:pact-version": {
+          "href": "https://pact-broker/pacts/provider/Bar/consumer/Foo/version/3e1f00a04",
+          "title": "Pact",
+          "name": "Pact between Foo (3e1f00a04) and Bar"
+        },
+        "pb:consumer": {
+          "href": "https://pact-broker/pacticipants/Foo",
+          "title": "Consumer",
+          "name": "Foo"
+        },
+        "pb:provider": {
+          "href": "https://pact-broker/pacticipants/Bar",
+          "title": "Provider",
+          "name": "Bar"
+        }
+      }
+    }
+  }
+}

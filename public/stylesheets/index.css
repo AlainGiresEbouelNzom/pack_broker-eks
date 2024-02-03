@@ -1,0 +1,257 @@
+:root {
+  /* See public/javascripts/set-css-asset-base-url.js */
+  --kebab-url: url('/images/kebab-horizontal.svg');
+  --arrow-switch-url: url('/images/arrow-switch.svg');
+  --alert-url: url('/images/alert.svg');
+  --copy-url:  url('/images/copy.svg');
+  --check-url: url('/images/check.svg');
+}
+
+.table-striped>tbody>tr>td.pact, .table-striped>thead>tr>th.pact {
+  border-left: none;
+  border-right: none;
+}
+
+.table-striped>tbody>tr>td.consumer, .table-striped>thead>tr>th.consumer {
+  border-right: none;
+}
+
+.table-striped>tbody>tr>td.provider, .table-striped>thead>tr>th.provider {
+  border-left: none;
+}
+
+table#relationships {
+  /*table-layout: fixed;*/
+}
+
+table#relationships td,
+table#relationships th {
+  text-align: left;
+  vertical-align: middle
+}
+
+table#relationships th,
+table#relationships td {
+  border-right: none;
+  border-left: none;
+}
+
+table#relationships td.pact {
+  text-align: center;
+}
+
+.relationships-size {
+  text-align: right;
+  color: gray;
+}
+
+.relationships-sort {
+  padding-left:10px;
+  cursor: pointer;
+}
+
+.hack {
+  padding-right: 20px;
+}
+
+body { padding-top: 10px; }
+
+.consumer, .provider {
+  text-align: center;
+  word-wrap: break-word;
+}
+
+.consumer-version,
+.provider-version,
+.consumer-version-number,
+.provider-version-number {
+  word-wrap: break-word;
+}
+
+.clippable {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.clippy {
+  padding: 0 4px;
+  border: none;
+  background: none;
+}
+
+.clippy:hover {
+  color: #2a6496;
+}
+
+.success {
+  color: #5cb85c
+}
+
+span.pact {
+  display: inline-block;
+}
+
+span.pact svg, span.pact-matrix svg {
+  width: 20px !important;
+  height: 20px !important;
+  overflow: visible;
+}
+
+span.pact svg path, span.pact-matrix svg path {
+  fill: #111111;
+  stroke: #111111;
+}
+
+span.pact:hover svg path, span.pact-matrix:hover svg path {
+  fill: #2a6496;
+  stroke: #2a6496;
+}
+
+#navigation .container-fluid {
+  padding-left: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#navigation .container-fluid .navbar-brand {
+  padding: 0px;
+  display: flex;
+  align-items: center;
+}
+
+#navigation .container-fluid:before {
+  content: '' !important;
+  display: none;
+}
+
+#navigation .container-fluid:after {
+  content: '' !important;
+  display: none;
+}
+
+#top-left-menu li a{
+  padding-left: 10px
+}
+#top-left-menu li{
+  list-style: none;
+}
+
+table#relationships .label {
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+div.tag {
+  display: inline-block;
+}
+
+div.getting-started {
+  max-width: 600px;
+  margin-bottom: 50px;
+}
+
+td.to-be-deleted {
+  background-color: #f2dede !important
+}
+
+
+div.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+nav.paginationjs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+ul.pagination li {
+  padding-right: 1em;
+}
+
+div.pagination div.nav-footer {
+  color: gray;
+}
+
+
+span.integration-settings {
+
+}
+
+span.kebab-horizontal {
+  background-image: var(--kebab-url);
+  background-repeat: no-repeat;
+  display:block;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+span.sort-icon {
+  background-image: var(--arrow-switch-url);
+  background-repeat: no-repeat;
+  display:inline-block;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  transform: rotate(90deg);
+}
+
+span.warning-icon {
+ background-image: var(--alert-url);
+ background-repeat: no-repeat;
+ display:inline-block;
+ position: relative;
+ width: 16px;
+ height: 16px;
+}
+
+.navbar-right {
+  float: right!important;
+}
+
+.page-header {
+  padding-bottom: 9px;
+  margin: 40px 0 20px;
+  border-bottom: 1px solid #eee;
+}
+
+span.copy-icon {
+  background-image: var(--copy-url);
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+  display:block;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+span.copy-success-icon {
+  background-image: var(--check-url);
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+  display:block;
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.search-field {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+div.top-of-group {
+  margin-top: 20px;
+}
+
+
+div[data-toggle="tooltip"] {
+  cursor: pointer;
+}

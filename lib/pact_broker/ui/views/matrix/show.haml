@@ -1,0 +1,211 @@
+- require "pact_broker/version"
+
+%body
+  %link{rel: 'stylesheet', href: "#{base_url}/css/bootstrap.min.css?v=#{PactBroker::VERSION}"}
+  %link{rel: 'stylesheet', href: "#{base_url}/stylesheets/index.css?v=#{PactBroker::VERSION}"}
+  %link{rel: 'stylesheet', href: "#{base_url}/stylesheets/matrix.css?v=#{PactBroker::VERSION}"}
+  %script{type: 'text/javascript', src: "#{base_url}/javascripts/jquery-3.5.1.min.js?v=#{PactBroker::VERSION}"}
+  %script{type: 'text/javascript', src: "#{base_url}/javascripts/jquery.tablesorter.min.js?v=#{PactBroker::VERSION}"}
+  %script{type: 'text/javascript', src: "#{base_url}/javascripts/matrix.js?v=#{PactBroker::VERSION}"}
+  %script{type: 'text/javascript', src: "#{base_url}/javascripts/clipboard.js?v=#{PactBroker::VERSION}"}
+  %script{type: 'text/javascript', src: "#{base_url}/js/bootstrap.bundle.min.js?v=#{PactBroker::VERSION}"}
+  %script{type: 'text/javascript', src: "#{base_url}/javascripts/set-css-asset-base-url.js?v=#{PactBroker::VERSION}"}
+
+  .container
+    %nav{'aria-label': 'breadcrumb'}
+      %ol.breadcrumb
+        %li.breadcrumb-item
+          %a{'href': "#{base_url}/"}
+            Home
+        %li.breadcrumb-item.active{'aria-current': 'page'}
+          The Matrix
+    %h1.page-header
+      The Matrix
+      - if defined?(badge_url) && badge_url
+        %img{src: badge_url, class: 'pact_badge' }
+
+    - if defined?(errors) && errors.any?
+      - errors.each do | error |
+        %div.alert.alert-danger
+          = error
+
+    %form{action: "#{base_url}/matrix", onsubmit:'return onSubmit()'}
+      - selectors.each_with_index do | selector, index |
+        .selector
+          .field
+            %label{for: "pacticipant#{index}"}
+              Pacticipant name
+
+            %input{name: 'q[]pacticipant', id: "pacticipant1#{index}", class: 'pacticipant_name', value: selector.pacticipant_name}
+
+          .field
+
+            %select{ name: "ignorethis#{index}", class: 'version-selectorizor' }
+              %option{ value: 'specify-all-versions', selected: selector.specify_all_versions }
+                All versions
+              %option{ value: 'specify-latest', selected: selector.specify_latest }
+                Latest version
+              %option{ value: 'specify-version', selected: selector.specify_version }
+                Version number ...
+              %option{ value: 'specify-latest-branch', selected: selector.specify_latest_branch }
+                Latest version from branch ...
+              %option{ value: 'specify-all-branch', selected: selector.specify_all_branch }
+                All versions from branch ...
+              %option{ value: 'specify-environment', selected: selector.specify_environment }
+                Version(s) in environment ...
+              %option{ value: 'specify-latest-tag', selected: selector.specify_latest_tag }
+                Latest version with tag ...
+              %option{ value: 'specify-all-tagged', selected: selector.specify_all_tagged }
+                All versions with tag...
+
+
+            %input{name: 'q[]version', type: 'text', id: "pacticipant#{index}_version", class: 'version', value: selector.pacticipant_version_number}
+
+            %input{name: 'q[]branch', type: 'text', id: "pacticipant#{index}_branch", class: 'branch', value: selector.branch}
+
+            %input{name: 'q[]environment', type: 'text', id: "pacticipant#{index}_environment", class: 'environment', value: selector.environment_name}
+
+            %input{name: 'q[]tag', type: 'text', id: "pacticipant#{index}_tag", class: 'tag', value: selector.tag}
+
+            %input{name: 'q[]latest', value: 'true', hidden: true, class: 'latest-flag'}
+
+
+      %input{name: 'latest', value: options.latest.to_s, hidden: true }
+      %input{name: 'mainBranch', value: options.mainBranch.to_s, hidden: true}
+
+      - if options.tag
+        .selector
+          %label{for: 'to'}
+            = options.latest ? 'To (tag)' : 'With all (tagged)'
+          %input{name: 'tag', id: 'to', value: options.tag }
+
+      - if options.environment_name
+        .selector
+          %label{for: 'environment'}
+            To environment
+          %input{name: 'environment', id: 'environment', value: options.environment_name }
+
+
+      %div.top-of-group.form-check
+        %input{type: 'radio', name: "latestby", class: 'form-check-input', value: '', id: 'all_rows', checked: options.all_rows_checked}
+        %label{for: 'all_rows', class: "form-check-label"}
+          Show all results
+      %div.form-check
+        %input{type: 'radio', name: "latestby", class: 'form-check-input', value: 'cvpv', id: 'cvpv', checked: options.cvpv_checked}
+        %label{for: 'cvpv', class: "form-check-label"}
+          Show latest result for each consumer version/provider version
+      %div.form-check
+        .input-group
+          %input{type: 'radio', name: "latestby", class: 'form-check-input', value: 'cvp', id: 'cvp', checked: options.cvp_checked}
+          %label{for: 'cvp', class: "form-check-label"}
+            Show latest result for each consumer version/provider
+      %div.top-of-group
+        - limit_text = "Note that the 'Show latest...' options are summaries of the 'Show all results' query, and that the limit applies to the underlying query, rather than the number of rows returned in the summary."
+        %label{for: "limit", "title": limit_text, "data-toggle": "tooltip", "data-placement": "right"}
+          Limit*
+        %input{name: 'limit', id: "limit", value: options.limit}
+      %div.top-of-group
+        %input{type: 'submit'}
+
+
+    %p{style: 'text-align:right'}
+      = "#{lines.size} rows"
+    %table.table.table-bordered.table-striped{id: 'matrix'}
+      %thead
+        %tr
+          %th.consumer
+            = "Consumer"
+            %span.sort-icon.sort
+          %th.consumer-version
+            = "Consumer Version"
+            %span.sort-icon.sort
+          %th.pact-published
+            = "Pact Published"
+            %span.sort-icon.sort
+          %th.provider
+            = "Provider"
+            %span.sort-icon.sort
+          %th.provider-version
+            = "Provider Version"
+            %span.sort-icon.sort
+          %th.verification-result
+            Pact verified
+            %span.sort-icon.sort
+      %tbody
+      - lines.each do | line |
+        %tr
+          %td.consumer{'data-sort-value' => line.consumer_name, 'data-consumer-name' => line.consumer_name}
+            %a{href: line.consumer_name_url}
+              = line.consumer_name
+          %td.consumer-version{'data-sort-value' => line.consumer_version_order, 'data-consumer-version-id' => line.consumer_version_id}
+            %div.clippable{'data-clippable': line.consumer_version_number}
+              %a{href: line.consumer_version_number_url}
+                = line.display_consumer_version_number
+              - if line.display_consumer_version_number
+                %button.clippy.invisible{ title: "Copy to clipboard" }
+                  %span.copy-icon
+            - line.consumer_version_branches.each do | branch |
+              .tag-parent{"title": branch.tooltip, "data-toggle": "tooltip", "data-placement": "right"}
+                - branch_class = branch.latest? ? "tag badge badge-dark" : "tag badge badge-secondary"
+                %div{"class": branch_class}
+                  = "branch: " + ellipsisize(branch.name)
+            - line.consumer_versions_in_environments.each do | version_in_environment |
+              .tag-parent{"title": version_in_environment.tooltip, "data-toggle": "tooltip", "data-placement": "right"}
+                %a{href: version_in_environment.url}
+                  .tag.badge.badge-success
+                    = "env: " + ellipsisize(version_in_environment.environment_name)
+            - line.latest_consumer_version_tags.each do | tag |
+              .tag-parent{"title": tag.tooltip, "data-toggle": "tooltip", "data-placement": "right"}
+                %a{href: tag.url}
+                  .tag.badge.badge-primary
+                    = "tag: " + ellipsisize(tag.name)
+            - line.other_consumer_version_tags.each do | tag |
+              .tag-parent{"title": tag.tooltip, "data-toggle": "tooltip", "data-placement": "right"}
+                %a{href: tag.url}
+                  .tag.badge.badge-secondary
+                    = "tag: " + ellipsisize(tag.name)
+          %td.pact-published{'data-sort-value' => line.pact_published_order, "data-toggle": "tooltip", "title": line.pact_version_sha_message, "data-placement": "right", "data-pact-version-sha": line.pact_version_sha}
+            %a{href: line.pact_publication_date_url}
+              - if options.all_rows_checked
+                = "#{line.pact_publication_date} (revision #{line.pact_revision_number})"
+              - else
+                = line.pact_publication_date
+
+          %td.provider{'data-sort-value' => line.provider_name, 'data-provider-name' => line.provider_name }
+            %a{href: line.provider_name_url}
+              = line.provider_name
+          %td.provider-version{'data-sort-value' => line.provider_version_order, 'data-provider-version-id' => line.provider_version_id }
+            %div.clippable{'data-clippable': line.provider_version_number}
+              %a{href: line.provider_version_number_url}
+                = line.display_provider_version_number
+              - if line.display_provider_version_number
+                %button.clippy.invisible{ title: "Copy to clipboard" }
+                  %span.copy-icon
+            - line.provider_version_branches.each do | branch |
+              .tag-parent{"title": branch.tooltip, "data-toggle": "tooltip", "data-placement": "right"}
+                - branch_class = branch.latest? ? "tag badge badge-dark" : "tag badge badge-secondary"
+                %div{"class": branch_class}
+                  = "branch: " + ellipsisize(branch.name)
+            - line.provider_versions_in_environments.each do | version_in_environment |
+              .tag-parent{"title": version_in_environment.tooltip, "data-toggle": "tooltip", "data-placement": "right"}
+                %a{href: version_in_environment.url}
+                  .tag.badge.badge-success
+                    = "env: " + ellipsisize(version_in_environment.environment_name)
+            - line.latest_provider_version_tags.each do | tag |
+              .tag-parent{"title": tag.tooltip, "data-toggle": "tooltip", "data-placement": "right"}
+                %a{href: tag.url}
+                  .tag.badge.badge-primary
+                    = "tag: " + ellipsisize(tag.name)
+            - line.other_provider_version_tags.each do | tag |
+              .tag-parent{"title": tag.tooltip, "data-toggle": "tooltip", "data-placement": "right"}
+                %a{href: tag.url}
+                  .tag.badge.badge-secondary
+                    = "tag: " + ellipsisize(tag.name)
+          %td.verification-result{class: line.verification_status_class, "title": line.pre_verified_message, "data-toggle": "tooltip", "data-placement": "left"}
+            %a{href: line.verification_status_url}
+              - if options.all_rows_checked && line.number
+                = "#{line.verification_status} (number #{line.number})"
+              - else
+                = line.verification_status
+            - if line.pre_verified_message
+              %span.pre-verified-icon{"aria-hidden": true}

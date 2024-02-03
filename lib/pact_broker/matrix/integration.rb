@@ -1,0 +1,96 @@
+# Represents the integration relationship between a consumer and a provider in the context
+# of a matrix or can-i-deploy query.
+# If the required flag is set, then one of the pacticipants specified in the matrix query
+# is a consumer and it requires the provider to be already deployed. An integration would not be required if a provider
+# was specified, and it had an integration with a consumer, but that consumer wasn't deployed yet.
+#
+
+module PactBroker
+  module Matrix
+    class Integration
+
+      attr_reader :consumer_name, :consumer_id, :provider_name, :provider_id
+
+      def initialize(consumer_id, consumer_name, provider_id, provider_name, required)
+        @consumer_id = consumer_id
+        @consumer_name = consumer_name
+        @provider_id = provider_id
+        @provider_name = provider_name
+        @required = required
+      end
+
+      def self.from_hash hash
+        new(
+          hash.fetch(:consumer_id),
+          hash.fetch(:consumer_name),
+          hash.fetch(:provider_id),
+          hash.fetch(:provider_name),
+          hash.fetch(:required)
+        )
+      end
+
+      def consumer
+        @consumer ||= OpenStruct.new(name: consumer_name, id: consumer_id)
+      end
+
+      def provider
+        @provider ||= OpenStruct.new(name: provider_name, id: provider_id)
+      end
+
+      def required?
+        @required
+      end
+
+      def == other
+        other.is_a?(Integration) && consumer_id == other.consumer_id && provider_id == other.provider_id && other.required? == required?
+      end
+
+      def <=> other
+        comparison = consumer_name <=> other.consumer_name
+        return comparison if comparison != 0
+        provider_name <=> other.provider_name
+      end
+
+      def to_hash
+        {
+          consumer_name: consumer_name,
+          consumer_id: consumer_id,
+          provider_name: provider_name,
+          provider_id: provider_id,
+        }
+      end
+
+      def pacticipant_names
+        [consumer_name, provider_name]
+      end
+
+      def to_s
+        "Integration between #{consumer_name} (id=#{consumer_id}) and #{provider_name} (id=#{provider_id}) required=#{required?}"
+      end
+
+      def involves_consumer_with_id?(consumer_id)
+        self.consumer_id == consumer_id
+      end
+
+      def involves_consumer_with_names?(consumer_names)
+        consumer_names.include?(self.consumer_name)
+      end
+
+      def involves_provider_with_name?(provider_name)
+        self.provider_name == provider_name
+      end
+
+      def involves_consumer_with_name?(consumer_name)
+        self.consumer_name == consumer_name
+      end
+
+      def involves_pacticipant_with_name?(pacticipant_name)
+        pacticipant_names.include?(pacticipant_name)
+      end
+
+      def matches_pacticipant_ids?(other)
+        consumer_id == other.consumer_id && provider_id == other.provider_id
+      end
+    end
+  end
+end

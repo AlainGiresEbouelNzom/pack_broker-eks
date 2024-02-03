@@ -1,0 +1,77 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sqlite:
+    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+    runs-on: "ubuntu-latest"
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby_version: ["3.2"]
+    env:
+      OAS_COVERAGE_CHECK_ENABLED: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby_version }}
+      - run: "bundle install"
+      - name: Tests
+        run: "bundle exec rake ci"
+  postgres:
+    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+    runs-on: "ubuntu-latest"
+    strategy:
+      fail-fast: false
+      matrix:
+        postgres_docker_image_tag: ["15", "14", "9.6"]
+    steps:
+      - uses: actions/checkout@v4
+      - run: script/test/run-rake-on-docker-compose-postgres.sh
+        env:
+          POSTGRES_DOCKER_IMAGE_TAG: ${{ matrix.postgres_docker_image_tag }}
+  mysql:
+    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v4
+      - run: script/test/run-rake-on-docker-compose-mysql.sh
+  rubocop:
+    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - run: "bundle exec rubocop"
+  pact-verify:
+    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Verify pacts
+        run: "GIT_SHA=${GITHUB_SHA} GIT_BRANCH=${GITHUB_REF##*/} bundle exec rake pact:verify"
+        env:
+          PACTFLOW_PACT_FOUNDATION_TOKEN: ${{ secrets.PACTFLOW_PACT_FOUNDATION_TOKEN }}
+  bundle-audit:
+    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Audit
+        run: "bundle exec rake bundle:audit"

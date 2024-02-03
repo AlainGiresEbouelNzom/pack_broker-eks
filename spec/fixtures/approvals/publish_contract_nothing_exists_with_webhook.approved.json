@@ -1,0 +1,155 @@
+{
+  "request": {
+    "path": "/contracts/publish",
+    "headers": {
+      "Content-Type": "application/json",
+      "Accept": "application/hal+json"
+    },
+    "body": {
+      "pacticipantName": "Foo",
+      "pacticipantVersionNumber": "1",
+      "branch": "main",
+      "tags": [
+        "a",
+        "b"
+      ],
+      "buildUrl": "http://ci/builds/1234",
+      "contracts": [
+        {
+          "consumerName": "Foo",
+          "providerName": "Bar",
+          "specification": "pact",
+          "contentType": "application/json",
+          "content": "eyJjb25zdW1lciI6eyJuYW1lIjoiRm9vIn0sInByb3ZpZGVyIjp7Im5hbWUiOiJCYXIifSwiaW50ZXJhY3Rpb25zIjpbXX0=",
+          "onConflict": "overwrite"
+        }
+      ]
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/hal+json;charset=utf-8"
+    },
+    "body": {
+      "logs": [
+        {
+          "level": "debug",
+          "message": "Created Foo version 1 with branch main and tags a, b",
+          "deprecationWarning": "Replaced by notices"
+        },
+        {
+          "level": "success",
+          "message": "Pact successfully published for Foo version 1 and provider Bar.",
+          "deprecationWarning": "Replaced by notices"
+        },
+        {
+          "level": "debug",
+          "message": "  View the published pact at http://example.org/pacts/provider/Bar/consumer/Foo/version/1",
+          "deprecationWarning": "Replaced by notices"
+        },
+        {
+          "level": "debug",
+          "message": "  Events detected: contract_published, contract_content_changed (first time any pact published for this consumer with consumer version tagged a, first time any pact published for this consumer with consumer version tagged b)",
+          "deprecationWarning": "Replaced by notices"
+        },
+        {
+          "level": "debug",
+          "message": "  Webhook \"foo webhook\" triggered for event contract_content_changed.\n    View logs at http://example.org/triggered-webhooks/1234/logs",
+          "deprecationWarning": "Replaced by notices"
+        },
+        {
+          "level": "prompt",
+          "message": "  Next steps:",
+          "deprecationWarning": "Replaced by notices"
+        },
+        {
+          "level": "prompt",
+          "message": "    * Add Pact verification tests to the Bar build. See https://docs.pact.io/go/provider_verification",
+          "deprecationWarning": "Replaced by notices"
+        }
+      ],
+      "notices": [
+        {
+          "type": "debug",
+          "text": "Created Foo version 1 with branch main and tags a, b"
+        },
+        {
+          "type": "success",
+          "text": "Pact successfully published for Foo version 1 and provider Bar."
+        },
+        {
+          "type": "debug",
+          "text": "  View the published pact at http://example.org/pacts/provider/Bar/consumer/Foo/version/1"
+        },
+        {
+          "type": "debug",
+          "text": "  Events detected: contract_published, contract_content_changed (first time any pact published for this consumer with consumer version tagged a, first time any pact published for this consumer with consumer version tagged b)"
+        },
+        {
+          "type": "debug",
+          "text": "  Webhook \"foo webhook\" triggered for event contract_content_changed.\n    View logs at http://example.org/triggered-webhooks/1234/logs"
+        },
+        {
+          "type": "prompt",
+          "text": "  Next steps:"
+        },
+        {
+          "type": "prompt",
+          "text": "    * Add Pact verification tests to the Bar build. See https://docs.pact.io/go/provider_verification"
+        }
+      ],
+      "_embedded": {
+        "pacticipant": {
+          "name": "Foo",
+          "_links": {
+            "self": {
+              "href": "http://example.org/pacticipants/Foo"
+            }
+          }
+        },
+        "version": {
+          "number": "1",
+          "_links": {
+            "self": {
+              "title": "Version",
+              "name": "1",
+              "href": "http://example.org/pacticipants/Foo/versions/1"
+            }
+          }
+        }
+      },
+      "_links": {
+        "pb:pacticipant": {
+          "title": "Pacticipant",
+          "name": "Foo",
+          "href": "http://example.org/pacticipants/Foo"
+        },
+        "pb:pacticipant-version": {
+          "title": "Pacticipant version",
+          "name": "1",
+          "href": "http://example.org/pacticipants/Foo/versions/1"
+        },
+        "pb:pacticipant-version-tags": [
+          {
+            "title": "Tag",
+            "name": "a",
+            "href": "http://example.org/pacticipants/Foo/versions/1/tags/a"
+          },
+          {
+            "title": "Tag",
+            "name": "b",
+            "href": "http://example.org/pacticipants/Foo/versions/1/tags/b"
+          }
+        ],
+        "pb:contracts": [
+          {
+            "title": "Pact",
+            "name": "Pact between Foo (1) and Bar",
+            "href": "http://example.org/pacts/provider/Bar/consumer/Foo/version/1"
+          }
+        ]
+      }
+    }
+  }
+}
