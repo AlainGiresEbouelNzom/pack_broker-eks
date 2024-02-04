@@ -1,19 +1,16 @@
 pipeline {
   agent {
     kubernetes {
-      yamlFile 'kubernetes/KubernetesPod.yaml'
+      yamlFile 'kubernetes/jenkins-agent.yaml'
       retries 2
     }
   }
   stages {
-    stage('Run maven') {
-      steps {
-        container('maven') {
-          sh 'mvn -version'
-        }
-        container('busybox') {
-          sh '/bin/busybox'
-        }
+    stage('Apply Kubernetes files') {
+      steps{
+        // withKubeConfig([credentialsId: 'user1', serverUrl: 'https://api.k8s.my-company.com']){
+        sh 'kubectl apply -f /kubernetes/deployment.yml'
+        // }
       }
     }
   }
