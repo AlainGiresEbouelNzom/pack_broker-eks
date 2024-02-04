@@ -7,8 +7,9 @@ spec:
   containers:
   - name: jenkins-agent
     image: jenkins/agent
-    command:
-      - curl -sO http://3.97.12.36:8080/jnlpJars/agent.jar
-      - java -jar agent.jar -jnlpUrl http://3.97.12.36:8080/computer/deploy%2Deks%2D10%2Dsj0wk%2Dzqk3c%2Dfskx2/jenkins-agent.jnlp -secret bd1a53991e4d5926d8150ee57fa4c46a1fb4f3e2d4d8cfea16dcf6ce93dd1c13 -workDir "/home/jenkins/agent"
+    command: ["/bin/sh","-c"]
+    args:
+      - curl -sO http://3.97.12.36:8080/jnlpJars/agent.jar;
+        java -jar agent.jar -jnlpUrl http://3.97.12.36:8080/computer/deploy%2Deks%2D10%2Dsj0wk%2Dzqk3c%2Dfskx2/jenkins-agent.jnlp -secret bd1a53991e4d5926d8150ee57fa4c46a1fb4f3e2d4d8cfea16dcf6ce93dd1c13 -workDir "/home/jenkins/agent";
     # ports:
     # - containerPort: 50000
