@@ -16,6 +16,5 @@ spec:
       value: "/home/ubuntu/jenkins"
     - name: JENKINS_URL
       value: "http://3.97.12.36:8080"
-    command: ["/bin/sh","-c"]
     # ports:
     # - containerPort: 50000
