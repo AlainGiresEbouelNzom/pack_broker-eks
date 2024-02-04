@@ -6,4 +6,6 @@ metadata:
 spec:
   containers:
   - name: jenkins-agent
-    image: bitnami/kubectl
+    image: jenkins/agent
+    # ports:
+    # - containerPort: 50000
