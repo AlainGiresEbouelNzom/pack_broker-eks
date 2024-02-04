@@ -9,8 +9,12 @@ pipeline {
     stage('Apply Kubernetes files') {
       steps{
         // withKubeConfig([credentialsId: 'user1', serverUrl: 'https://api.k8s.my-company.com']){
-        sh 'kubectl apply -f /kubernetes/deployment.yml'
+        // sh 'kubectl apply -f /kubernetes/deployment.yml'
         // }
+
+        kubernetesDeploy{
+          configs: '/kubernetes/deployment.yml'
+        }
       }
     }
   }
