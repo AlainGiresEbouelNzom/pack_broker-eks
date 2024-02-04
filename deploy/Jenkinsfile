@@ -22,7 +22,7 @@ pipeline {
           //   kubeconfigId: 'eks-kubeconfig'
           // )
           withKubeConfig([credentialsId: 'eks-kubeconfig']) {
-            sh 'kubectl apply -f /kubernetes/deployment.yml'
+            sh 'kubectl apply -f kubernetes/deployment.yml'
           }
         }// sh "echo 'hello worl'"
       }
