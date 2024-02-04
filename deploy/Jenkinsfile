@@ -12,9 +12,10 @@ pipeline {
         // sh 'kubectl apply -f /kubernetes/deployment.yml'
         // }
 
-        kubernetesDeploy(
-          configs: '/kubernetes/deployment.yml'
-        )
+        // kubernetesDeploy(
+        //   configs: '/kubernetes/deployment.yml'
+        // )
+        sh "echo 'hello worl'"
       }
     }
   }
