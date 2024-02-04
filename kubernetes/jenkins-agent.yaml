@@ -6,10 +6,16 @@ metadata:
 spec:
   containers:
   - name: jenkins-agent
-    image: jenkins/agent
+    image: jenkins/inbound-agent
+    env:
+    - name: JENKINS_SECRET
+      value: "5fb62e262b341e3b5d49c6bbd3aadef5605f44b3a0340fede8809a72d3b8015d"
+    - name: JENKINS_AGENT_NAME
+      value: "eks-node"
+    - name: JENKINS_AGENT_WORKDIR
+      value: "/home/ubuntu/jenkins"
+    - name: JENKINS_URL
+      value: "http://3.97.12.36:8080"
     command: ["/bin/sh","-c"]
-    args:
-      - curl -sO http://3.97.12.36:8080/jnlpJars/agent.jar;
-        java -jar agent.jar -jnlpUrl http://3.97.12.36:8080/computer/deploy%2Deks%2D10%2Dsj0wk%2Dzqk3c%2Dfskx2/jenkins-agent.jnlp -secret bd1a53991e4d5926d8150ee57fa4c46a1fb4f3e2d4d8cfea16dcf6ce93dd1c13 -workDir "/home/jenkins/agent";
     # ports:
     # - containerPort: 50000
