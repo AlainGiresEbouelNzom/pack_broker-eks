@@ -1,34 +1,20 @@
-pipeline{
-    agent{
-        label "node"
+pipeline {
+  agent {
+    kubernetes {
+      yamlFile 'KubernetesPod.yaml'
+      retries 2
     }
-    stages{
-        stage("A"){
-            steps{
-                echo "========executing A========"
-            }
-            post{
-                always{
-                    echo "========always========"
-                }
-                success{
-                    echo "========A executed successfully========"
-                }
-                failure{
-                    echo "========A execution failed========"
-                }
-            }
+  }
+  stages {
+    stage('Run maven') {
+      steps {
+        container('maven') {
+          sh 'mvn -version'
         }
+        container('busybox') {
+          sh '/bin/busybox'
+        }
+      }
     }
-    post{
-        always{
-            echo "========always========"
-        }
-        success{
-            echo "========pipeline executed successfully ========"
-        }
-        failure{
-            echo "========pipeline execution failed========"
-        }
-    }
+  }
 }

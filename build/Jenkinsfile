@@ -6,7 +6,7 @@ pipeline{
   }
 
   stages{
-    stage("A"){
+    stage("Build and push"){
       steps{
           // echo "========executing A========"
         script {            
