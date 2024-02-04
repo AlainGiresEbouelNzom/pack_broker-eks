@@ -15,11 +15,12 @@ pipeline {
         // sh 'kubectl apply -f /kubernetes/deployment.yml'
         // }
         script{
-          kubernetesDeploy(
-            configs: '/kubernetes/deployment.yml',
-            kubeconfigId: 'eks-kubeconfig'
-          )
-          // withKubeConfig([credentialsId: 'my-AKS-cred']) {
+          // kubernetesDeploy(
+          //   configs: '/kubernetes/deployment.yml',
+          //   kubeconfigId: 'eks-kubeconfig'
+          // )
+          withKubeConfig([credentialsId: 'eks-kubeconfig']) {
+            sh 'kubectl apply -f /kubernetes/deployment.yml'
         }
         // sh "echo 'hello worl'"
       }
