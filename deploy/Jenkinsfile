@@ -17,7 +17,9 @@ pipeline {
         script{
           kubernetesDeploy(
             configs: '/kubernetes/deployment.yml'
+            kubeconfigId: 'eks-kubeconfig'
           )
+          // withKubeConfig([credentialsId: 'my-AKS-cred']) {
         }
         // sh "echo 'hello worl'"
       }
