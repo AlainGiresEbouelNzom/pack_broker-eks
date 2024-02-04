@@ -6,7 +6,9 @@ pipeline {
   //     // name eks-node
   //     // inheritFrom eks-node
   //   }
-  agent any
+  agent {
+    label 'aws'
+  }
   
   stages {
     stage('Apply Kubernetes files') {
