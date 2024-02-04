@@ -6,6 +6,6 @@ metadata:
 spec:
   containers:
   - name: jenkins-agent
-    image: enkins/agent
+    image: jenkins/agent
     command:
       - "java -jar /usr/share/jenkins/agent.jar"
