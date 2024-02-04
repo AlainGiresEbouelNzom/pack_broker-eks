@@ -16,7 +16,7 @@ pipeline {
         // }
         script{
           kubernetesDeploy(
-            configs: '/kubernetes/deployment.yml'
+            configs: '/kubernetes/deployment.yml',
             kubeconfigId: 'eks-kubeconfig'
           )
           // withKubeConfig([credentialsId: 'my-AKS-cred']) {
