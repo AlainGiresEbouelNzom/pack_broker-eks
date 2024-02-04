@@ -3,6 +3,7 @@ kind: Pod
 metadata:
   labels:
     app: jenkins-agent
+  name: "eks-node"
 spec:
   containers:
   - name: jenkins-agent

@@ -4,7 +4,7 @@ pipeline {
       yamlFile 'kubernetes/jenkins-agent.yaml'
       retries 2
       // name eks-node
-      inheritFrom eks-node
+      // inheritFrom eks-node
     }
   }
   stages {
